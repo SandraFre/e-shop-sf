@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\API\auth;
+namespace App\Http\Controllers\API\Auth;
 
 use App\Http\Controllers\Controller;
 use App\User;
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -16,11 +17,20 @@ class RegisterController extends Controller
 {
     use RegistersUsers;
 
+    /**
+     * RegisterController constructor.
+     */
     public function __construct()
     {
         $this->middleware('guest:api');
     }
 
+    /**
+     * Get a validator for an incoming registration request.
+     *
+     * @param array $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
     protected function validator(array $data)
     {
         return Validator::make($data, [
@@ -30,6 +40,12 @@ class RegisterController extends Controller
         ]);
     }
 
+    /**
+     * Create a new user instance after a valid registration.
+     *
+     * @param array $data
+     * @return User|Model
+     */
     protected function create(array $data): User
     {
         return User::query()->create([
@@ -39,18 +55,28 @@ class RegisterController extends Controller
         ]);
     }
 
+    /**
+     * Get the guard to be used during registration.
+     *
+     * @return \Illuminate\Contracts\Auth\StatefulGuard
+     */
     protected function guard()
     {
         return Auth::guard();
     }
 
+    /**
+     * @param Request $request
+     * @param User $user
+     * @return Response
+     */
     protected function registered(Request $request, $user)
     {
         $personalAccessToken = $user->createToken('Grant Client');
 
         return new Response([
             'token' => $personalAccessToken->accessToken,
-            'token_type' =>'Bearer',
+            'token_type' => 'Bearer',
         ], JsonResponse::HTTP_CREATED);
     }
 }
