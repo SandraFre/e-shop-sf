@@ -18,12 +18,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes(['register'=>false]);
+Auth::routes(['register' => false]);
 
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::middleware('auth')->group(function () {
     Route::resource('products', 'ProductController')->only(['index', 'create', 'store']);
+    Route::resource('categories', 'CategoryController')->except(['show']);
     Route::resource('orders', 'OrderController')->only(['index', 'edit', 'update', 'show']);
     Route::get('orders/{order}/item/{orderItem}/edit', 'OrderItemController@edit')->name('orders.item.edit');
     Route::put('orders/{order}/item/{orderItem}', 'OrderItemController@update')->name('orders.item.update');
