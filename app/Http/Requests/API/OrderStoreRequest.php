@@ -1,11 +1,16 @@
 <?php
 
-namespace App\Http\Requests\API;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Str;
 
-class OrderStoreRequest extends FormRequest
+/**
+ * Class ProductStoreRequest
+ * @package App\Http\Requests
+ */
+class ProductStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,29 +30,90 @@ class OrderStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'customer_title' => 'required|min:2|string',
-            'customer_email' => 'required|email|string',
-            'customer_phone' => 'nullable|string',
-            'customer_address' => 'required|string',
-            'items' => 'required|array',
-            'items.*.product_id' => 'required|exists:products,id',
-            'items.*.quantity' => 'required|integer|min:1',
+            'title' => 'required|string|max:255',
+            'slug' => 'nullable|string|max:255',
+            'price' => 'required|min:0.01',
+            'vat' => 'required|in:21,5,0',
+            'description' => 'nullable|string',
+            'quantity' => 'required|integer|min:0',
+            'image1' => 'nullable|image',
         ];
     }
 
+    /**
+     * @return array
+     */
     public function getData(): array
     {
         return [
-            'user_id' => Auth::id(),
-            'customer_title' => $this->input('customer_title'),
-            'customer_email' => $this->input('customer_email'),
-            'customer_phone' => $this->input('customer_phone'),
-            'customer_address' => $this->input('customer_address'),
+            'title' => $this->getTitle(),
+            'slug' => $this->getSlug(),
+            'price' => $this->getPrice(),
+            'vat' => $this->getVat(),
+            'description' => $this->getDescription(),
+            'quantity' => $this->getQuantity(),
         ];
     }
 
-    public function getItems(): array
+    /**
+     * @return string
+     */
+    public function getTitle(): string
     {
-        return $this->input('items');
+        return $this->input('title');
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlug(): string
+    {
+        $slug = $this->input('slug');
+
+        if (!$slug) {
+            $slug = $this->getTitle();
+        }
+
+        return Str::slug($slug);
+    }
+
+    /**
+     * @return float
+     */
+    public function getPrice(): float
+    {
+        return (float)$this->input('price');
+    }
+
+    /**
+     * @return string
+     */
+    public function getVat(): string
+    {
+        return $this->input('vat', '21');
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDescription(): ?string
+    {
+        return $this->input('description');
+    }
+
+    /**
+     * @return int
+     */
+    public function getQuantity(): int
+    {
+        return $this->input('quantity');
+    }
+
+    /**
+     * @return UploadedFile|null
+     */
+    public function getImage1(): ?UploadedFile
+    {
+        return $this->file('image1');
     }
 }
