@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use App\Http\Requests\CategoryStoreRequest;
+use App\Http\Requests\CategoryUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -52,9 +53,9 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function edit(Category $category)
+    public function edit(Category $category): View
     {
-        //
+        return view('categories.form', ['item'=>$category]);
     }
 
     /**
@@ -64,9 +65,12 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(CategoryUpdateRequest $request, Category $category): RedirectResponse
     {
-        //
+        $category->update($request->getData());
+
+        return redirect()->route('categories.index')
+        ->with('status', 'Category updated successfully');
     }
 
     /**
@@ -75,8 +79,11 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy(Category $category): RedirectResponse
     {
-        //
+        $category->delete();
+
+        return redirect()->route('categories.index')
+        ->with('status', 'Category deleted successfully');
     }
 }
