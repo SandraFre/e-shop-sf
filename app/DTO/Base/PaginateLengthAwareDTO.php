@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace app\DTO\Base;
+namespace App\DTO\Base;
 
-use app\DTO\Base\PaginateDTO;
+use App\DTO\Base\PaginateDTO;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class PaginateLengthAwareDTO extends PaginateDTO

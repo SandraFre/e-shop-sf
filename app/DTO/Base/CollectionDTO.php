@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace app\DTO\Base;
+namespace App\DTO\Base;
 
 use Illuminate\Support\Collection;
 

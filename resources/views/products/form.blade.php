@@ -43,8 +43,36 @@
 
                             <div class="form-group">
                                 <label for="image1">Image 1</label>
-                                <input class="form-control-file" id="image1" name="image1" value="" type="file">
+                                <input class="form-control-file" id="image1" name="image1" value="" type="file" >
                                 @error('image1')
+                                <em class="alert-danger">{{ $message }}</em>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="image2">Image 2</label>
+                                <input class="form-control-file" id="image2" name="image2" value="" type="file">
+                                @error('image2')
+                                <em class="alert-danger">{{ $message }}</em>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="image3">Image 3</label>
+                                <input class="form-control-file" id="image3" name="image3" value="" type="file">
+                                @error('image3')
+                                <em class="alert-danger">{{ $message }}</em>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="image4">Image 4</label>
+                                <input class="form-control-file" id="image4" name="image4" value="" type="file">
+                                @error('image4')
+                                <em class="alert-danger">{{ $message }}</em>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="image5">Image 5</label>
+                                <input class="form-control-file" id="image5" name="image5" value="" type="file">
+                                @error('image5')
                                 <em class="alert-danger">{{ $message }}</em>
                                 @enderror
                             </div>
@@ -70,6 +98,16 @@
                                 @error('vat')
                                 <em class="alert-danger">{{ $message }}</em>
                                 @enderror
+                            </div>
+
+                            <div class="form-group">
+                                <label for="categories">Categories</label>
+                                @foreach($categories as $id => $title)
+                                    <input type="checkbox" id="categories" name="categories[]"
+                                           value="{{ $id }}"
+                                           @if(in_array($id, old('categories', $categoryIds ?? []))) checked @endif
+                                    > {{ $title }}
+                                @endforeach
                             </div>
 
                             <div class="form-group">
