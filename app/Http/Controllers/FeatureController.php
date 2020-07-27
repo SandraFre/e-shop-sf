@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Feature;
+use App\Http\Requests\FeatureStoreRequest;
+use App\Http\Requests\FeatureUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -30,7 +32,7 @@ class FeatureController extends Controller
      */
     public function create(): View
     {
-        //
+        return view('features.form');
     }
 
     /**
@@ -39,9 +41,12 @@ class FeatureController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return RedirectResponse
      */
-    public function store(Request $request): RedirectResponse
+    public function store(FeatureStoreRequest $request): RedirectResponse
     {
-        //
+        Feature::query()->create($request->getData());
+
+        return redirect()->route('features.index')
+        ->with('status', 'Feature created');
     }
 
     /**
@@ -52,7 +57,7 @@ class FeatureController extends Controller
      */
     public function edit(Feature $feature): View
     {
-        //
+        return view('features.form', ['item'=>$feature]);
     }
 
     /**
@@ -62,9 +67,12 @@ class FeatureController extends Controller
      * @param Feature $feature
      * @return RedirectResponse
      */
-    public function update(Request $request, Feature $feature): RedirectResponse
+    public function update(FeatureUpdateRequest $request, Feature $feature): RedirectResponse
     {
-        //
+        $feature->update($request->getData());
+
+        return redirect()->route('features.index')
+        ->with('status', 'Feature updated');
     }
 
     /**
@@ -75,6 +83,9 @@ class FeatureController extends Controller
      */
     public function destroy(Feature $feature): RedirectResponse
     {
-        //
+        $feature->delete();
+
+        return redirect()->route('features.index')
+        ->with('status', 'Feature deleted');
     }
 }

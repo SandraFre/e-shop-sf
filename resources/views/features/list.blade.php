@@ -7,7 +7,7 @@
                 <div class="card">
                     <div class="card-header">
                         Features
-                        <a class="btn btn-sm btn-outline-primary float-right" href="{{route('features.create')}}">+</a>
+                        <a class="btn btn-sm btn-outline-primary float-right" href="{{route('features.create')}}">Add new</a>
                     </div>
 
                     <div class="card-body">
