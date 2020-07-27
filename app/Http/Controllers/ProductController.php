@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Category;
 use App\Feature;
 use App\Http\Requests\ProductStoreRequest;
+use App\Http\Requests\ProductUpdateRequest;
 use App\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -86,5 +87,48 @@ class ProductController extends Controller
 
         return redirect()->route('products.index')
             ->with('status', 'Created.');
+    }
+
+    public function edit(Product $product): View
+    {
+
+        $categoriesIds = $product->categories->pluck('id')->toArray();
+        $featuresValues = $product->featureValues->pluck('value', 'feature_id')->toArray();
+
+        $categories = Category::query()
+            ->pluck('title', 'id');
+        $features = Feature::query()
+            ->pluck('title', 'id');
+
+        return view('products.form', [
+            'item' => $product,
+            'itemFeatures' => $featuresValues,
+            'categoryIds' => $categoriesIds,
+            'categories' => $categories,
+            'features' => $features,
+        ]);
+    }
+
+    public function update(ProductUpdateRequest $request, Product $product): RedirectResponse
+    {
+        $product->update($request->getData());
+
+        $product->categories()->sync($request->getCatIds());
+
+        $product->featureValues()->delete();
+
+        $features = [];
+
+        foreach ($request->getFeatureValues() as $key => $value) {
+            $features[] = [
+                'feature_id' => $key,
+                'value' => $value,
+            ];
+        }
+
+        $product->featureValues()->createMany($features);
+
+        return redirect()->route('products.index')
+        ->with('status', '_Product updated');
     }
 }

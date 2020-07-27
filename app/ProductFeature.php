@@ -26,6 +26,11 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ProductFeature extends Model
 {
+    
+    public $incrementing = false;
+
+    public $timestamps = false;
+
     protected $fillable = [
         'product_id',
         'feature_id',

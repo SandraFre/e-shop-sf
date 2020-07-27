@@ -48,6 +48,7 @@ class Product extends Model implements HasMedia
 {
     use InteractsWithMedia;
 
+
     protected $fillable = [
         'title',
         'slug',
