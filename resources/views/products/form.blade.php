@@ -129,6 +129,17 @@
                                 @enderror
                             </div>
 
+                            <div class="form-group">
+                                <label for="features">Features</label>
+
+                                @foreach ($features as $id => $title)
+                                <div class="row">
+                                <label for="">{{$title}}</label>
+                                <input class="form-control" id="features" name="feature[{{$id}}]" type="text" value="{{old('feature.' . $id)}}">
+                                </div>
+                                @endforeach
+                            </div>
+
                         </div>
 
                         <div class="card-footer">

@@ -62,6 +62,11 @@ class ProductStoreRequest extends FormRequest
         ];
     }
 
+    public function getFeatureValues(): array
+    {
+        return $this->input('feature', []);
+    }
+
     /**
      * @return array
      */
