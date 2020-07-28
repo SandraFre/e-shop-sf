@@ -12,8 +12,15 @@ use App\Product;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 
+/**
+ * Class CategoryController
+ * @package App\Http\Controllers\API
+ */
 class CategoryController extends Controller
 {
+    /**
+     * @return JsonResponse
+     */
     public function index(): JsonResponse
     {
         $categories = Category::query()
@@ -29,24 +36,28 @@ class CategoryController extends Controller
         return response()->json($categoriesDTO);
     }
 
+    /**
+     * @param string $slug
+     * @return JsonResponse
+     */
     public function products(string $slug): JsonResponse
     {
         $products = Product::query()
-            ->with('categories')
+            ->with(['categories', 'featureValues', 'featureValues.feature'])
             ->whereHas('categories', function (Builder $q) use ($slug) {
                 $q->where('slug', '=', $slug);
             })
             ->paginate();
 
-            $paginateDTO = new PaginateLengthAwareDTO($products);
-            $productsDTO = new CollectionDTO();
+        $paginateDTO = new PaginateLengthAwareDTO($products);
+        $productsDTO = new CollectionDTO();
 
-            foreach ($products as $product) {
-                $productsDTO->pushItem(new ProductDTO($product));
-            }
+        foreach ($products as $product) {
+            $productsDTO->pushItem(new ProductDTO($product));
+        }
 
-            $paginateDTO->setData($productsDTO);
+        $paginateDTO->setData($productsDTO);
 
-        return response()->json($products);
+        return response()->json($paginateDTO);
     }
 }
